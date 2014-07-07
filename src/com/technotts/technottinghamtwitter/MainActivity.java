@@ -1,9 +1,17 @@
 package com.technotts.technottinghamtwitter;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,16 +20,22 @@ import android.view.ViewGroup;
 import android.os.Build;
 
 public class MainActivity extends Activity {
-
+	
+	private static final String TAG = "TechNotts";
+	private TweetDisplayFragment tweetFragment;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		if (savedInstanceState == null) {
+			tweetFragment = new TweetDisplayFragment();
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, tweetFragment).commit();
 		}
+		
+		new DownloadTweetsTask().execute();
 	}
 
 	@Override
@@ -43,22 +57,48 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
-			return rootView;
-		}
+	
+	private void onTwitterDownloaded(String jsonString) {
+		Log.d(TAG, jsonString);
+		tweetFragment.tweetsUpdated(jsonString);
 	}
 
+	private class DownloadTweetsTask extends AsyncTask<Void, Void, String> {
+
+		@Override
+		protected String doInBackground(Void... params) {
+			String jsonString = null;
+			try {
+				URL url = new URL(
+						"http://multipie-dev.appspot.com/twitter_downloader");
+				HttpURLConnection urlConnection = (HttpURLConnection) url
+						.openConnection();
+
+				try {
+					InputStream in = new BufferedInputStream(
+							urlConnection.getInputStream());
+
+					jsonString = convertStreamToString(in);
+				} finally {
+					urlConnection.disconnect();
+				}
+			} catch (Exception e) {
+				Log.d(TAG, "Error downloading");
+				e.printStackTrace();
+			}
+			return jsonString;
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			if( result != null ) {
+				onTwitterDownloaded(result);
+			}
+		}
+
+		private String convertStreamToString(java.io.InputStream is) {
+			java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+			return s.hasNext() ? s.next() : "";
+		}
+	}
 }

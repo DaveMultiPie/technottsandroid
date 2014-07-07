@@ -23,7 +23,7 @@ public class TweetDisplayFragment extends Fragment {
 	}
 	
 	public void tweetsUpdated(String tweetsJSON) {
-		// You have JSONArray of tweets here
+		// You have a json string of tweets here
 		// See ReadMe in github for hints.
 		mJsonTextView.setText(tweetsJSON);
 	}

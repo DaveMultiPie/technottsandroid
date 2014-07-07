@@ -6,6 +6,8 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
+
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -97,8 +99,11 @@ public class MainActivity extends Activity {
 		}
 
 		private String convertStreamToString(java.io.InputStream is) {
-			java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-			return s.hasNext() ? s.next() : "";
+			try {
+				return IOUtils.toString(is);
+			} catch (Exception e) {
+				return "Error parsing string";
+			}
 		}
 	}
 }

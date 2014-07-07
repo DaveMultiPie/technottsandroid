@@ -16,21 +16,23 @@ The JSON currently looks like this:
 [
     {
         "message": "RT @technottingham: Are you coming along to Tech Nottingham at @Antenna_UK tonight? #TechNott http://t.co/9Sp1fFsaXm http://t.co/7eVSRQpSYA",
-        "created_at": "Mon Jul 07 13:14:05 UTC 2014",
-        "user": "@chriskey"
-    },
-    {
-        "message": "RT @technottingham: Are you coming along to Tech Nottingham at @Antenna_UK tonight? #TechNott http://t.co/9Sp1fFsaXm http://t.co/7eVSRQpSYA",
-        "created_at": "Mon Jul 07 12:24:54 UTC 2014",
+        "created_at": 1404735894000,
         "user": "@MultiPie"
     },
     {
         "message": "RT @technottingham: Are you coming along to Tech Nottingham at @Antenna_UK tonight? #TechNott http://t.co/9Sp1fFsaXm http://t.co/7eVSRQpSYA",
-        "created_at": "Mon Jul 07 11:38:09 UTC 2014",
-        "user": "@MrAndrew"
+        "created_at": 1404731397000,
+        "user": "@Antenna_UK"
+    },
+    {
+        "message": "Are you coming along to Tech Nottingham at @Antenna_UK tonight? #TechNott http://t.co/9Sp1fFsaXm http://t.co/7eVSRQpSYA",
+        "created_at": 1404730615000,
+        "user": "@technottingham"
     }
 ]
 ```
+
+"created_at" is a timestamp, the time in **milliseconds** since 1970.
 
 You will need to parse this JSON String, save it for later and display one of the random tweets when a button is pressed.
 
